@@ -149,7 +149,7 @@
                 icon: '{{ session("swal.type", "success") }}',
                 title: '{{ session("swal.title") }}',
                 text: '{{ session("swal.text", "") }}',
-                confirmButtonColor: '#7C3AED'
+                confirmButtonColor: '{{ $colors["primary"] ?? "#7C3AED" }}'
             });
         </script>
     @endif

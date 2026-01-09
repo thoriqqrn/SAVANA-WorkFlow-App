@@ -154,13 +154,14 @@ function initSweetAlertForms() {
             e.preventDefault();
             const href = this.getAttribute("href");
             const message = this.dataset.confirm || "Lanjutkan tindakan ini?";
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#7C3AED';
 
             Swal.fire({
                 title: "Konfirmasi",
                 text: message,
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonColor: "#7C3AED",
+                confirmButtonColor: primaryColor,
                 cancelButtonColor: "#6B7280",
                 confirmButtonText: "Ya, Lanjutkan",
                 cancelButtonText: "Batal",
@@ -216,6 +217,11 @@ function initTooltips() {
 
 /* ==================== Helper Functions ==================== */
 
+// Get primary color from CSS variable
+function getPrimaryColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#7C3AED';
+}
+
 // Show toast notification
 function showToast(message, type = "success") {
     const Toast = Swal.mixin({
@@ -242,7 +248,7 @@ function showSuccess(title, text) {
         icon: "success",
         title: title,
         text: text,
-        confirmButtonColor: "#7C3AED",
+        confirmButtonColor: getPrimaryColor(),
     });
 }
 
@@ -252,7 +258,7 @@ function showError(title, text) {
         icon: "error",
         title: title,
         text: text,
-        confirmButtonColor: "#7C3AED",
+        confirmButtonColor: getPrimaryColor(),
     });
 }
 

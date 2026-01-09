@@ -6,7 +6,7 @@
 @push('styles')
 <style>
 .date-header {
-    background: linear-gradient(135deg, #7C3AED, #A78BFA);
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
     border-radius: 16px;
     padding: 24px;
     color: white;

@@ -68,12 +68,12 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #7C3AED, #A78BFA);
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
     border: none;
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+    box-shadow: 0 4px 20px var(--primary-light);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -135,7 +135,7 @@
 
 .chat-header {
     padding: 16px 20px;
-    background: linear-gradient(135deg, #7C3AED, #A78BFA);
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
     color: white;
     display: flex;
     align-items: center;
@@ -305,7 +305,7 @@
 }
 
 .chat-message.mine {
-    background: linear-gradient(135deg, #7C3AED, #A78BFA);
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
     color: white;
     align-self: flex-end;
     border-bottom-right-radius: 4px;
@@ -347,13 +347,13 @@
     outline: none;
 }
 
-.chat-input-form input:focus { border-color: #7C3AED; }
+.chat-input-form input:focus { border-color: var(--primary); }
 
 .chat-input-form button {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #7C3AED, #A78BFA);
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
     border: none;
     color: white;
     cursor: pointer;
