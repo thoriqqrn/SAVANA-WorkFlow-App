@@ -51,7 +51,8 @@
         0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
         0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --shadow-purple: 0 4px 24px rgba(124, 58, 237, 0.15);
+    --shadow-primary: 0 4px 14px -2px var(--primary-light);
+    --shadow-primary-lg: 0 8px 24px -4px var(--primary);
 
     /* Transitions */
     --transition-fast: 150ms ease;
@@ -572,8 +573,13 @@ h6 {
     background: var(--bg-card);
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow), var(--shadow-primary);
     overflow: hidden;
+    transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md), 0 8px 20px -4px var(--primary-light);
 }
 
 .card-header {
@@ -619,6 +625,13 @@ h6 {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
+    box-shadow: var(--shadow), var(--shadow-primary);
+    transition: all var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md), 0 6px 16px -4px var(--primary-light);
 }
 
 .stat-icon {
@@ -715,7 +728,7 @@ h6 {
 .btn-primary:hover {
     background: var(--primary-hover);
     color: white;
-    box-shadow: var(--shadow-purple);
+    box-shadow: 0 4px 12px -2px var(--primary);
 }
 
 .btn-secondary {
@@ -1534,10 +1547,84 @@ h6 {
     .date-header {
         padding: 1rem;
         text-align: center;
+        flex-direction: column;
     }
     
-    .date-header .date-day {
-        font-size: 2rem;
+    .date-header .date-left,
+    .date-header .date-right {
+        text-align: center;
+        width: 100%;
+    }
+    
+    /* Modal */
+    .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+    
+    /* Timeline items */
+    .timeline-item {
+        padding: 1rem;
+    }
+    
+    /* User list */
+    .user-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    /* Action buttons group */
+    .action-buttons,
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .action-buttons .btn,
+    .btn-group .btn {
+        width: 100%;
+    }
+    
+    /* Search box */
+    .search-box {
+        width: 100%;
+    }
+    
+    /* Disable hover effects on touch */
+    .card:hover {
+        transform: none;
+    }
+    
+    .stat-card:hover {
+        transform: none;
+    }
+    
+    /* Fix overflow */
+    .page-content {
+        overflow-x: hidden;
+    }
+    
+    /* Alert */
+    .alert {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    /* Badge inline */
+    .badge {
+        font-size: 0.7rem;
+    }
+    
+    /* Program cards */
+    .program-card .card-body {
+        padding: 1rem;
+    }
+    
+    /* Task cards */
+    .task-meta {
+        flex-wrap: wrap;
     }
 }
 
