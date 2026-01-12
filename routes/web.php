@@ -84,17 +84,26 @@ Route::middleware('auth')->group(function () {
         Route::resource('timelines', TimelineController::class)->except(['index', 'show']);
     });
     
-    // Task Routes - CREATE must come BEFORE {task} parameter!
+    // Task Routes - Kanban Style Navigation
+    // Create/Store/Delete require admin/bph/kabinet
     Route::middleware('role:admin,bph,kabinet')->group(function () {
         Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
         Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
         Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     });
     
-    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+    // Kanban Navigation - All authenticated users
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index'); // Department cards
+    Route::get('/tasks/global', [TaskController::class, 'global'])->name('tasks.global'); // Global kanban
+    Route::get('/tasks/department/{department}', [TaskController::class, 'department'])->name('tasks.department'); // Program cards
+    Route::get('/tasks/department/{department}/tasks', [TaskController::class, 'departmentTasks'])->name('tasks.department.tasks'); // Dept kanban
+    Route::get('/tasks/program/{program}', [TaskController::class, 'program'])->name('tasks.program'); // Program kanban
+    
+    // Task CRUD
     Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::patch('/tasks/{task}/progress', [TaskController::class, 'updateProgress'])->name('tasks.progress');
+    Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status'); // Drag-drop AJAX
     
     // All users can view Drive & Links
     Route::get('/drives', [DriveController::class, 'index'])->name('drives.index');

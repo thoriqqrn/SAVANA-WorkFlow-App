@@ -34,6 +34,11 @@ class Department extends Model
         return $this->hasMany(Timeline::class);
     }
 
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'active');

@@ -11,22 +11,32 @@ class Task extends Model
         'title',
         'description',
         'program_id',
+        'department_id', // For department-level tasks
         'assigned_to',
         'created_by',
         'status',
         'progress',
         'priority',
         'deadline',
+        'is_global', // For global tasks
     ];
 
     protected $casts = [
         'deadline' => 'date',
         'progress' => 'integer',
+        'is_global' => 'boolean',
     ];
+
+    public const STATUSES = ['todo', 'in_progress', 'pending', 'done'];
 
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class);
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function assignee(): BelongsTo
@@ -39,6 +49,7 @@ class Task extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    // Scopes
     public function scopeTodo($query)
     {
         return $query->where('status', 'todo');
@@ -49,9 +60,29 @@ class Task extends Model
         return $query->where('status', 'in_progress');
     }
 
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
     public function scopeDone($query)
     {
         return $query->where('status', 'done');
+    }
+
+    public function scopeGlobal($query)
+    {
+        return $query->where('is_global', true);
+    }
+
+    public function scopeForDepartment($query, $departmentId)
+    {
+        return $query->where('department_id', $departmentId)->whereNull('program_id');
+    }
+
+    public function scopeForProgram($query, $programId)
+    {
+        return $query->where('program_id', $programId);
     }
 
     public function scopeOverdue($query)
@@ -76,11 +107,34 @@ class Task extends Model
         return $this->deadline && $this->deadline->isPast() && $this->status !== 'done';
     }
 
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'todo' => 'To Do',
+            'in_progress' => 'In Progress',
+            'pending' => 'Pending',
+            'done' => 'Done',
+            default => 'Unknown',
+        };
+    }
+
+    public function getStatusColorAttribute(): string
+    {
+        return match ($this->status) {
+            'todo' => '#6B7280',
+            'in_progress' => '#F59E0B',
+            'pending' => '#8B5CF6',
+            'done' => '#10B981',
+            default => '#6B7280',
+        };
+    }
+
     public function getStatusBadgeAttribute(): string
     {
         return match ($this->status) {
             'todo' => 'secondary',
             'in_progress' => 'warning',
+            'pending' => 'primary',
             'done' => 'success',
             default => 'secondary',
         };
@@ -93,6 +147,16 @@ class Task extends Model
             'medium' => 'primary',
             'high' => 'danger',
             default => 'secondary',
+        };
+    }
+
+    public function getPriorityLabelAttribute(): string
+    {
+        return match ($this->priority) {
+            'low' => 'Rendah',
+            'medium' => 'Sedang',
+            'high' => 'Tinggi',
+            default => 'Unknown',
         };
     }
 }

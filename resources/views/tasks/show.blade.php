@@ -33,16 +33,26 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="text-muted fs-sm">Program</label>
+                            <label class="text-muted fs-sm">Tipe Task</label>
                             <div class="fw-semibold">
-                                <a href="{{ route('programs.show', $task->program) }}">{{ $task->program->name ?? '-' }}</a>
+                                @if($task->is_global)
+                                    <span class="badge badge-primary">Global</span>
+                                @elseif($task->program_id)
+                                    <a href="{{ route('tasks.program', $task->program) }}">{{ $task->program->name }}</a>
+                                @elseif($task->department_id)
+                                    <a href="{{ route('tasks.department.tasks', $task->department) }}">{{ $task->department->name }}</a>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="text-muted fs-sm">Departemen</label>
-                            <div class="fw-semibold">{{ $task->program->department->name ?? '-' }}</div>
+                            <div class="fw-semibold">
+                                {{ $task->program?->department?->name ?? $task->department?->name ?? 'Global' }}
+                            </div>
                         </div>
                     </div>
                     <div class="col-6">
