@@ -83,10 +83,40 @@
                             <span class="badge"></span>
                         @endif
                     </button>
-                    <div class="dropdown">
-                        <button type="button" class="header-btn" id="userDropdown">
+                    <div class="dropdown user-dropdown">
+                        <button type="button" class="header-btn dropdown-toggle" id="userDropdown" onclick="toggleUserDropdown()">
                             <img src="{{ auth()->user()->avatar_url }}" alt="Avatar" class="avatar-sm">
+                            <span class="user-name-header">{{ auth()->user()->name }}</span>
+                            <i class="fas fa-chevron-down"></i>
                         </button>
+                        <div class="dropdown-menu" id="userDropdownMenu">
+                            <div class="dropdown-header">
+                                <img src="{{ auth()->user()->avatar_url }}" alt="" class="dropdown-avatar">
+                                <div class="dropdown-user-info">
+                                    <div class="dropdown-user-name">{{ auth()->user()->name }}</div>
+                                    <div class="dropdown-user-role">{{ auth()->user()->role_name }}</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                                <i class="fas fa-user-edit"></i>
+                                <span>Edit Profil</span>
+                            </a>
+                            @if(auth()->user()->isAdmin())
+                            <a href="{{ route('settings.index') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Pengaturan</span>
+                            </a>
+                            @endif
+                            <div class="dropdown-divider"></div>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -160,6 +190,22 @@
     @auth
         @include('components.floating-chat')
     @endauth
+    
+    <script>
+    function toggleUserDropdown() {
+        const menu = document.getElementById('userDropdownMenu');
+        menu.classList.toggle('show');
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        const dropdown = document.querySelector('.user-dropdown');
+        const menu = document.getElementById('userDropdownMenu');
+        if (dropdown && menu && !dropdown.contains(e.target)) {
+            menu.classList.remove('show');
+        }
+    });
+    </script>
 </body>
 </html>
 
