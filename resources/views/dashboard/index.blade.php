@@ -95,9 +95,84 @@
     .date-header {
         flex-direction: column;
         text-align: center;
+        padding: 16px;
     }
     .date-header .date-left {
         flex-direction: column;
+        gap: 8px;
+    }
+    .date-header .date-day {
+        font-size: 2.5rem;
+    }
+    .date-header .date-info {
+        font-size: 0.9rem;
+    }
+    .quick-actions {
+        flex-direction: column;
+    }
+    .quick-actions .btn {
+        width: 100%;
+        flex: unset;
+    }
+    .stat-mini {
+        flex-direction: column;
+        text-align: center;
+        padding: 16px;
+        gap: 10px;
+    }
+    .stat-mini .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    .stat-mini .stat-value {
+        font-size: 1.5rem;
+    }
+    .stat-mini .stat-label {
+        font-size: 0.8rem;
+    }
+    .progress-circle {
+        width: 120px;
+        height: 120px;
+    }
+    .card-body.d-flex {
+        flex-direction: column;
+        gap: 1rem !important;
+    }
+    .progress-legend {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .progress-legend-item {
+        font-size: 0.75rem;
+    }
+    .col-6.col-lg-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .col-12.col-md-5,
+    .col-12.col-md-7 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .row .col-12.col-lg-8,
+    .row .col-12.col-lg-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .date-header .date-day {
+        font-size: 2rem;
+    }
+    .stat-mini .stat-value {
+        font-size: 1.25rem;
+    }
+    .col-6.col-lg-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
     }
 }
 </style>
