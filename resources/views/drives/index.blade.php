@@ -3,6 +3,63 @@
 @section('title', 'Google Drive')
 @section('page-title', 'Google Drive Organisasi')
 
+@push('styles')
+<style>
+/* Drive Modal */
+.event-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 1rem;
+}
+
+.event-modal.show {
+    display: flex;
+}
+
+.event-modal-content {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 450px;
+    width: 100%;
+    animation: modalFadeIn 0.2s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #3B82F6;
+    padding: 12px 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 480px) {
+    .event-modal-content {
+        padding: 16px;
+        max-width: 95%;
+    }
+}
+</style>
+@endpush
+
 @section('content')
 <div class="card animate-fadeIn">
     <div class="card-header">
