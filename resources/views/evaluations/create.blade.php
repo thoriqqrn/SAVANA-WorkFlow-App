@@ -5,6 +5,46 @@
 
 @push('styles')
 <style>
+.staff-info-card {
+    background: linear-gradient(135deg, var(--primary-light), white);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.staff-avatar-lg {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: var(--shadow);
+}
+
+.staff-details h4 {
+    margin: 0 0 4px;
+    font-weight: 600;
+}
+
+.staff-details p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.period-badge {
+    background: var(--primary);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-left: auto;
+}
+
 .star-rating {
     display: flex;
     gap: 8px;
@@ -53,6 +93,19 @@
 @section('content')
 <div class="row justify-center">
     <div class="col-12 col-lg-8">
+        <!-- Staff Info -->
+        <div class="staff-info-card animate-fadeIn">
+            <img src="{{ $staff->avatar_url }}" alt="{{ $staff->name }}" class="staff-avatar-lg">
+            <div class="staff-details">
+                <h4>{{ $staff->name }}</h4>
+                <p>{{ $staff->department?->name ?? '-' }} • {{ $staff->email }}</p>
+            </div>
+            <div class="period-badge">
+                <i class="fas fa-calendar"></i>
+                {{ \App\Models\Evaluation::getMonthLabel($month) }}
+            </div>
+        </div>
+
         <div class="card animate-fadeIn">
             <div class="card-header">
                 <h3 class="card-title">
@@ -63,37 +116,9 @@
             <div class="card-body">
                 <form action="{{ route('evaluations.store') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="user_id" value="{{ $staff->id }}">
+                    <input type="hidden" name="period" value="{{ $month }}">
                     
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="user_id" class="form-label">Staff <span class="text-danger">*</span></label>
-                                <select id="user_id" name="user_id" class="form-control form-select @error('user_id') is-invalid @enderror" required>
-                                    <option value="">-- Pilih Staff --</option>
-                                    @foreach($staffMembers as $staff)
-                                        <option value="{{ $staff->id }}" {{ (old('user_id') ?? $selectedStaff?->id) == $staff->id ? 'selected' : '' }}>
-                                            {{ $staff->name }} ({{ $staff->department?->name ?? '-' }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('user_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="period" class="form-label">Periode <span class="text-danger">*</span></label>
-                                <input type="text" id="period" name="period" class="form-control @error('period') is-invalid @enderror" value="{{ old('period', 'Q1 2026') }}" placeholder="contoh: Q1 2026, Semester 1" required>
-                                @error('period')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <hr class="my-4">
                     <h5 class="mb-3">
                         <i class="fas fa-clipboard-check text-primary"></i>
                         Penilaian (1-5)
@@ -150,7 +175,7 @@
                             <i class="fas fa-save"></i>
                             Simpan Evaluasi
                         </button>
-                        <a href="{{ route('evaluations.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('evaluations.department', ['department' => $staff->department_id, 'month' => $month]) }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i>
                             Kembali
                         </a>

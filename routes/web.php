@@ -66,7 +66,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/programs/{program}/pics', [ProgramController::class, 'addPic'])->name('programs.pics.add');
         Route::delete('/programs/{program}/pics/{user}', [ProgramController::class, 'removePic'])->name('programs.pics.remove');
         
-        Route::resource('evaluations', EvaluationController::class);
+        // Evaluations - Hierarchical navigation
+        Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
+        Route::get('/evaluations/department/{department}', [EvaluationController::class, 'department'])->name('evaluations.department');
+        Route::get('/evaluations/create', [EvaluationController::class, 'create'])->name('evaluations.create');
+        Route::post('/evaluations', [EvaluationController::class, 'store'])->name('evaluations.store');
+        Route::get('/evaluations/user/{user}', [EvaluationController::class, 'show'])->name('evaluations.show');
+        Route::get('/evaluations/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+        Route::put('/evaluations/{evaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
+        Route::delete('/evaluations/{evaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
+        Route::get('/evaluations/ranking', [EvaluationController::class, 'ranking'])->name('evaluations.ranking');
     });
     
     // Staff can view programs they are member/PIC of

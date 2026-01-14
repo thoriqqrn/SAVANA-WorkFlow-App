@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 class Evaluation extends Model
 {
@@ -93,6 +94,27 @@ class Evaluation extends Model
         return $this->grade?->color ?? '#9CA3AF';
     }
 
+    // Monthly helpers
+    public static function getCurrentMonth(): string
+    {
+        return now()->format('Y-m');
+    }
+
+    public static function getMonthLabel(string $period): string
+    {
+        return Carbon::createFromFormat('Y-m', $period)->translatedFormat('F Y');
+    }
+
+    public static function getAvailableMonths(): array
+    {
+        $months = [];
+        for ($i = 0; $i < 12; $i++) {
+            $date = now()->subMonths($i);
+            $months[$date->format('Y-m')] = $date->translatedFormat('F Y');
+        }
+        return $months;
+    }
+
     // Scopes
     public function scopeByUser($query, $userId)
     {
@@ -102,6 +124,11 @@ class Evaluation extends Model
     public function scopeByPeriod($query, $period)
     {
         return $query->where('period', $period);
+    }
+
+    public function scopeByMonth($query, $month)
+    {
+        return $query->where('period', $month);
     }
 
     public function scopeByEvaluatorType($query, $type)
@@ -151,7 +178,32 @@ class Evaluation extends Model
             'bph_score' => $bphScore,
             'final_score' => $finalScore,
             'is_complete' => $kabinetEval && $bphEval,
+            'has_kabinet' => (bool) $kabinetEval,
+            'has_bph' => (bool) $bphEval,
             'grade' => $grade,
         ];
+    }
+
+    // Get monthly ranking
+    public static function getMonthlyRanking(string $month, ?int $departmentId = null, int $limit = 10): array
+    {
+        $query = User::byRole('staff')->active()->with('department');
+        
+        if ($departmentId) {
+            $query->where('department_id', $departmentId);
+        }
+        
+        $staffMembers = $query->get()->map(function ($staff) use ($month) {
+            $combined = self::getCombinedScore($staff->id, $month);
+            $staff->evaluation_score = $combined['final_score'] ?? 0;
+            $staff->evaluation_data = $combined;
+            return $staff;
+        })
+        ->filter(fn($s) => $s->evaluation_score > 0)
+        ->sortByDesc('evaluation_score')
+        ->take($limit)
+        ->values();
+        
+        return $staffMembers->toArray();
     }
 }
