@@ -87,6 +87,86 @@
     width: 90%;
     animation: fadeIn 0.2s ease;
 }
+
+/* Mobile Calendar Fixes */
+@media (max-width: 768px) {
+    .fc .fc-toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .fc .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1rem;
+        text-align: center;
+    }
+    
+    .fc .fc-button {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .fc .fc-daygrid-day-frame {
+        min-height: 60px;
+    }
+    
+    .fc .fc-daygrid-day-number {
+        padding: 4px;
+        font-size: 0.8rem;
+    }
+    
+    .fc-event {
+        font-size: 0.65rem;
+        padding: 1px 4px;
+    }
+    
+    .fc .fc-col-header-cell-cushion {
+        font-size: 0.75rem;
+    }
+    
+    .fc-daygrid-day-events {
+        margin-top: 2px;
+    }
+    
+    .fc-daygrid-event-harness {
+        margin-bottom: 1px;
+    }
+    
+    .calendar-legend {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .calendar-legend .legend-item {
+        font-size: 0.75rem;
+    }
+    
+    .event-modal-content {
+        padding: 16px;
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .fc .fc-toolbar-chunk:last-child {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .fc .fc-button {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
+    
+    .fc-daygrid-day-events {
+        max-height: 40px;
+        overflow: hidden;
+    }
+}
 </style>
 @endpush
 
