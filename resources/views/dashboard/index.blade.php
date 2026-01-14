@@ -413,6 +413,35 @@
         </div>
     </div>
 </div>
+
+@if(auth()->user()->hasRole(['admin', 'bph']) && isset($departmentProgress) && isset($monthlyTrends))
+<!-- Charts Row for Admin/BPH -->
+<div class="row mb-4">
+    <!-- Department Progress Chart -->
+    <div class="col-12 col-lg-6 mb-3">
+        <div class="card animate-fadeIn h-100">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="fas fa-chart-bar text-primary"></i> Progress per Departemen</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="deptProgressChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Monthly Trends Chart -->
+    <div class="col-12 col-lg-6 mb-3">
+        <div class="card animate-fadeIn h-100">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="fas fa-chart-line text-success"></i> Tren Task Bulanan</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyTrendsChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('scripts')
@@ -439,6 +468,83 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    @if(auth()->user()->hasRole(['admin', 'bph']) && isset($departmentProgress) && isset($monthlyTrends))
+    // Department Progress Chart
+    const deptCtx = document.getElementById('deptProgressChart');
+    if (deptCtx) {
+        new Chart(deptCtx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode(collect($departmentProgress)->pluck('name')) !!},
+                datasets: [{
+                    label: 'Selesai',
+                    data: {!! json_encode(collect($departmentProgress)->pluck('done')) !!},
+                    backgroundColor: '#10B981',
+                    borderRadius: 4,
+                }, {
+                    label: 'Total Task',
+                    data: {!! json_encode(collect($departmentProgress)->pluck('total')) !!},
+                    backgroundColor: '#E5E7EB',
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { boxWidth: 12, padding: 10 } }
+                },
+                scales: {
+                    x: { beginAtZero: true, grid: { display: false } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // Monthly Trends Chart
+    const trendsCtx = document.getElementById('monthlyTrendsChart');
+    if (trendsCtx) {
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: {!! json_encode(collect($monthlyTrends)->pluck('month')) !!},
+                datasets: [{
+                    label: 'Task Dibuat',
+                    data: {!! json_encode(collect($monthlyTrends)->pluck('created')) !!},
+                    borderColor: '#7C3AED',
+                    backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#7C3AED'
+                }, {
+                    label: 'Task Selesai',
+                    data: {!! json_encode(collect($monthlyTrends)->pluck('completed')) !!},
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#10B981'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { boxWidth: 12, padding: 10 } }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+    @endif
 });
 </script>
 @endpush

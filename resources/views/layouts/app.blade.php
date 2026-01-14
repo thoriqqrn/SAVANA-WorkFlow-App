@@ -77,12 +77,30 @@
                     <button type="button" class="header-btn theme-toggle" title="Toggle Dark Mode">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <button type="button" class="header-btn" title="Notifikasi">
-                        <i class="fas fa-bell"></i>
-                        @if(isset($unreadNotifications) && $unreadNotifications > 0)
-                            <span class="badge"></span>
-                        @endif
-                    </button>
+                    
+                    <!-- Notification Dropdown -->
+                    <div class="dropdown notification-dropdown">
+                        <button type="button" class="header-btn notification-toggle" onclick="toggleNotificationDropdown()" title="Notifikasi">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                        </button>
+                        <div class="dropdown-menu notification-menu" id="notificationDropdown">
+                            <div class="dropdown-header">
+                                <span><i class="fas fa-bell"></i> Notifikasi</span>
+                                <button type="button" class="btn btn-sm btn-link" onclick="markAllNotificationsRead()">
+                                    Tandai Dibaca
+                                </button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <div class="notification-loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Memuat...
+                                </div>
+                            </div>
+                            <div class="dropdown-footer">
+                                <a href="{{ route('notifications.index') }}">Lihat Semua Notifikasi</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="dropdown user-dropdown">
                         <button type="button" class="header-btn dropdown-toggle" id="userDropdown" onclick="toggleUserDropdown()">
                             <img src="{{ auth()->user()->avatar_url }}" alt="Avatar" class="avatar-sm">
@@ -195,15 +213,132 @@
     function toggleUserDropdown() {
         const menu = document.getElementById('userDropdownMenu');
         menu.classList.toggle('show');
+        // Close notification dropdown
+        document.getElementById('notificationDropdown')?.classList.remove('show');
     }
     
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        const dropdown = document.querySelector('.user-dropdown');
-        const menu = document.getElementById('userDropdownMenu');
-        if (dropdown && menu && !dropdown.contains(e.target)) {
-            menu.classList.remove('show');
+    function toggleNotificationDropdown() {
+        const menu = document.getElementById('notificationDropdown');
+        const isOpening = !menu.classList.contains('show');
+        menu.classList.toggle('show');
+        // Close user dropdown
+        document.getElementById('userDropdownMenu')?.classList.remove('show');
+        
+        if (isOpening) {
+            loadNotifications();
         }
+    }
+    
+    function loadNotifications() {
+        const list = document.getElementById('notificationList');
+        list.innerHTML = '<div class="notification-loading"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';
+        
+        fetch('{{ route("notifications.recent") }}')
+            .then(res => res.json())
+            .then(data => {
+                updateNotificationBadge(data.unread_count);
+                
+                if (data.notifications.length === 0) {
+                    list.innerHTML = '<div class="notification-empty"><i class="fas fa-bell-slash"></i><p>Tidak ada notifikasi</p></div>';
+                    return;
+                }
+                
+                let html = '';
+                data.notifications.forEach(n => {
+                    const isUnread = !n.read_at;
+                    const icon = getNotificationIcon(n.type);
+                    const color = getNotificationColor(n.type);
+                    const timeAgo = formatTimeAgo(n.created_at);
+                    
+                    html += `
+                        <a href="#" class="notification-item ${isUnread ? 'unread' : ''}" onclick="markNotificationRead(${n.id}, event)">
+                            <div class="notification-icon ${color}"><i class="${icon}"></i></div>
+                            <div class="notification-content">
+                                <div class="notification-title">${n.title}</div>
+                                <div class="notification-message">${n.message || ''}</div>
+                                <div class="notification-time">${timeAgo}</div>
+                            </div>
+                        </a>
+                    `;
+                });
+                list.innerHTML = html;
+            })
+            .catch(() => {
+                list.innerHTML = '<div class="notification-empty"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat</p></div>';
+            });
+    }
+    
+    function markNotificationRead(id, event) {
+        event.preventDefault();
+        fetch(`/notifications/${id}/read`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+        }).then(res => res.json()).then(data => {
+            if (data.success) window.location.href = getNotificationLink(id);
+        });
+    }
+    
+    function markAllNotificationsRead() {
+        fetch('{{ route("notifications.mark-all-read") }}', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                updateNotificationBadge(0);
+                document.querySelectorAll('.notification-item.unread').forEach(el => el.classList.remove('unread'));
+            }
+        });
+    }
+    
+    function updateNotificationBadge(count) {
+        const badge = document.getElementById('notificationBadge');
+        if (count > 0) {
+            badge.textContent = count > 9 ? '9+' : count;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    function getNotificationIcon(type) {
+        return { task_assigned: 'fas fa-tasks', deadline_reminder: 'fas fa-clock', evaluation_new: 'fas fa-star', announcement: 'fas fa-bullhorn' }[type] || 'fas fa-bell';
+    }
+    
+    function getNotificationColor(type) {
+        return { task_assigned: 'primary', deadline_reminder: 'warning', evaluation_new: 'success', announcement: 'info' }[type] || 'secondary';
+    }
+    
+    function getNotificationLink(id) {
+        return `/notifications/${id}/read`;
+    }
+    
+    function formatTimeAgo(dateStr) {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000);
+        if (diff < 60) return 'Baru saja';
+        if (diff < 3600) return Math.floor(diff / 60) + ' menit lalu';
+        if (diff < 86400) return Math.floor(diff / 3600) + ' jam lalu';
+        return Math.floor(diff / 86400) + ' hari lalu';
+    }
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        const userDropdown = document.querySelector('.user-dropdown');
+        const notifDropdown = document.querySelector('.notification-dropdown');
+        const userMenu = document.getElementById('userDropdownMenu');
+        const notifMenu = document.getElementById('notificationDropdown');
+        
+        if (userDropdown && userMenu && !userDropdown.contains(e.target)) userMenu.classList.remove('show');
+        if (notifDropdown && notifMenu && !notifDropdown.contains(e.target)) notifMenu.classList.remove('show');
+    });
+    
+    // Check for unread count on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('{{ route("notifications.unread-count") }}')
+            .then(res => res.json())
+            .then(data => updateNotificationBadge(data.count))
+            .catch(() => {});
     });
     </script>
 </body>

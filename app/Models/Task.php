@@ -29,6 +29,18 @@ class Task extends Model
 
     public const STATUSES = ['todo', 'in_progress', 'pending', 'done'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Notify assignee when task is created
+        static::created(function ($task) {
+            if ($task->assigned_to) {
+                Notification::notifyTaskAssigned($task);
+            }
+        });
+    }
+
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class);

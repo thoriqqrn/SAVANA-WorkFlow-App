@@ -44,6 +44,11 @@ class Evaluation extends Model
         static::saving(function ($evaluation) {
             $evaluation->total_score = $evaluation->calculateScore();
         });
+
+        // Notify staff when evaluation is created
+        static::created(function ($evaluation) {
+            Notification::notifyEvaluation($evaluation);
+        });
     }
 
     public function calculateScore(): float

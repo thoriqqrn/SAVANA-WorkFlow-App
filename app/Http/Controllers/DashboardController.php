@@ -28,6 +28,8 @@ class DashboardController extends Controller
         if ($user->hasRole(['admin', 'bph'])) {
             $data['departmentStats'] = $this->getDepartmentStats();
             $data['staffRanking'] = $this->getStaffRanking();
+            $data['departmentProgress'] = $this->getDepartmentProgress();
+            $data['monthlyTrends'] = $this->getMonthlyTrends();
         }
 
         return view('dashboard.index', $data);
@@ -122,5 +124,53 @@ class DashboardController extends Controller
             ->orderByDesc('evaluations_avg_total_score')
             ->limit(5)
             ->get();
+    }
+
+    /**
+     * Get task progress per department for chart
+     */
+    private function getDepartmentProgress(): array
+    {
+        $departments = Department::active()->get();
+        $progress = [];
+
+        foreach ($departments as $dept) {
+            $programIds = $dept->programs()->pluck('id');
+            $totalTasks = Task::whereIn('program_id', $programIds)->count();
+            $doneTasks = Task::whereIn('program_id', $programIds)->where('status', 'done')->count();
+            
+            $progress[] = [
+                'name' => $dept->name,
+                'total' => $totalTasks,
+                'done' => $doneTasks,
+                'percentage' => $totalTasks > 0 ? round(($doneTasks / $totalTasks) * 100) : 0,
+            ];
+        }
+
+        return $progress;
+    }
+
+    /**
+     * Get monthly task completion trends for chart (last 6 months)
+     */
+    private function getMonthlyTrends(): array
+    {
+        $trends = [];
+        
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $monthStart = $date->startOfMonth()->toDateString();
+            $monthEnd = $date->copy()->endOfMonth()->toDateString();
+            
+            $trends[] = [
+                'month' => $date->translatedFormat('M Y'),
+                'created' => Task::whereBetween('created_at', [$monthStart, $monthEnd])->count(),
+                'completed' => Task::where('status', 'done')
+                    ->whereBetween('updated_at', [$monthStart, $monthEnd])
+                    ->count(),
+            ];
+        }
+
+        return $trends;
     }
 }
