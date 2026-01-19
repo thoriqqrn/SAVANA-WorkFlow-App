@@ -32,9 +32,13 @@
             <div class="nav-section-title">Manajemen</div>
             
             @if(auth()->user()->isAdmin())
-            <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+            <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.index') || request()->routeIs('users.show') || request()->routeIs('users.create') || request()->routeIs('users.edit') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
                 <span>Data User</span>
+            </a>
+            <a href="{{ route('users.import') }}" class="nav-item {{ request()->routeIs('users.import*') ? 'active' : '' }}">
+                <i class="fas fa-file-csv"></i>
+                <span>Import User CSV</span>
             </a>
             @endif
             
