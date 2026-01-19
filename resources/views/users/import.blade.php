@@ -98,9 +98,79 @@
     margin-bottom: 1rem;
 }
 
+@media (max-width: 992px) {
+    .import-page {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
     .import-page {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .upload-zone {
+        padding: 1.5rem 1rem;
+    }
+    
+    .upload-zone i {
+        font-size: 2rem;
+    }
+    
+    .d-flex.gap-2 {
+        flex-direction: column;
+    }
+    
+    .d-flex.gap-2 .btn {
+        width: 100%;
+    }
+    
+    .format-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .format-table th, .format-table td {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .csv-example {
+        font-size: 0.7rem;
+        padding: 10px 12px;
+    }
+    
+    .result-item {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .result-item span:last-child {
+        flex: 1 1 100%;
+        word-break: break-word;
+    }
+    
+    .card-header h3.card-title,
+    .card-header h5.card-title {
+        font-size: 0.95rem;
+    }
+    
+    .alert-info {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .format-table th, .format-table td {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .csv-example {
+        font-size: 0.65rem;
     }
 }
 </style>
