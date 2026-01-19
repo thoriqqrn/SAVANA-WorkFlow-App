@@ -51,6 +51,11 @@ Route::middleware('auth')->group(function () {
     
     // Admin Only Routes
     Route::middleware('role:admin')->group(function () {
+        // User Import (must be before resource to avoid conflict with {user})
+        Route::get('/users/import', [UserController::class, 'importForm'])->name('users.import');
+        Route::post('/users/import', [UserController::class, 'import'])->name('users.import.process');
+        Route::get('/users/import/template', [UserController::class, 'downloadTemplate'])->name('users.import.template');
+        
         Route::resource('users', UserController::class);
         Route::resource('settings', SettingController::class)->only(['index', 'update']);
         Route::resource('drives', DriveController::class)->except(['index', 'show']);
