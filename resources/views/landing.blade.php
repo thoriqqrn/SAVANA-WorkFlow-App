@@ -738,7 +738,8 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="/" class="navbar-brand">
-            <span>🔗 HIMATEKKOM ITS</span>
+            <img src="/images/logokabinet.png" alt="Logo" style="height: 40px; border-radius: 8px;">
+            <span>Sentra Sinergi</span>
         </a>
         <button class="mobile-menu-btn" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
@@ -768,7 +769,7 @@
         <div class="hero-container">
             <div class="hero-content">
                 <div class="hero-badge">
-                    <i class="fas fa-star"></i> Calon Ketua HIMATEKKOM ITS 2025/2026
+                    <i class="fas fa-star"></i> Calon Ketua HIMATEKKOM ITS 2026
                 </div>
                 <h1 class="hero-title">
                     Kabinet <span class="highlight">Sentra Sinergi</span>
@@ -789,8 +790,7 @@
             <div class="hero-photo">
                 <div class="candidate-card">
                     <div class="candidate-photo">
-                        <!-- Ganti dengan foto calon ketua -->
-                        <i class="fas fa-user"></i>
+                        <img src="/images/fotopanji.JPG" alt="Muhammad Panji Fathuroni">
                     </div>
                     <h2 class="candidate-name">Muhammad Panji Fathuroni</h2>
                     <p class="candidate-title">Calon Ketua Himpunan</p>

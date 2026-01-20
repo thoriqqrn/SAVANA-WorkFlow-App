@@ -1,5 +1,5 @@
 @php
-    $appName = \App\Models\Setting::get('app_name', 'SAVANA');
+    $appName = \App\Models\Setting::get('app_name', 'CMOS');
     $themeColor = \App\Models\Setting::get('theme_color', 'purple');
     $themeColors = [
         'purple' => ['primary' => '#7C3AED', 'hover' => '#6D28D9', 'soft' => '#A78BFA', 'light' => '#EDE9FE'],
