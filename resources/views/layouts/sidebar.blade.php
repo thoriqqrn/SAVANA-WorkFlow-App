@@ -2,7 +2,7 @@
 <aside class="sidebar" id="sidebar">
     <!-- Sidebar Header -->
     @php
-        $appName = \App\Models\Setting::get('app_name', 'SAVANA');
+        $appName = \App\Models\Setting::get('app_name', 'CMOS');
     @endphp
     <div class="sidebar-header">
         <div class="sidebar-logo">🔗</div>
