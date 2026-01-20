@@ -25,9 +25,14 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Guest Routes
+// Public Landing Page
+Route::get('/', function () {
+    return view('landing');
+})->name('home');
+
+// Guest Routes  
 Route::middleware('guest')->group(function () {
-    Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 });
 
