@@ -921,6 +921,7 @@
         </button>
         <div class="nav-links" id="navLinks">
             <a href="#visi-misi">Visi Misi</a>
+            <a href="#experience">Pengalaman</a>
             <a href="#programs">Program</a>
             <a href="#cmos">CMOS</a>
             <a href="{{ route('login') }}" class="btn-login">
@@ -972,6 +973,10 @@
                     </div>
                     <h2 class="candidate-name">Muhammad Panji Fathuroni</h2>
                     <p class="candidate-title">Calon Ketua Himpunan</p>
+                    <p style="color: var(--gold); font-size: 1.1rem; font-weight: 600; margin: 0.5rem 0;">5024231050</p>
+                    <a href="https://drive.google.com/file/d/18WhCsPhoJqr_UKEbjPaZhkvGJt85kq6a/view?usp=sharing" target="_blank" class="btn-outline" style="margin-top: 1rem; font-size: 0.9rem; padding: 10px 24px;">
+                        <i class="fas fa-file-pdf"></i> Download CV
+                    </a>
                 </div>
             </div>
         </div>
@@ -1003,6 +1008,93 @@
             <div class="misi-item">
                 <div class="misi-number">3</div>
                 <p><strong>Melakukan ekspansi</strong> ekosistem pengembangan mahasiswa yang adaptif serta meningkatkan eksistensi HIMATEKKOM ITS di lingkup eksternal</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience" id="experience" style="background: #0A0A14; padding: 6rem 2rem;">
+        <div class="section-header">
+            <div class="section-badge">Track Record</div>
+            <h2 class="section-title">Pengalaman <span class="highlight">Organisasi</span></h2>
+            <p class="section-desc">Dedikasi dan kontribusi nyata dalam berbagai organisasi</p>
+        </div>
+        
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 3rem;">
+            <!-- Organization Experience -->
+            <div style="background: linear-gradient(145deg, rgba(74, 20, 140, 0.2) 0%, rgba(255, 215, 0, 0.05) 100%); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 24px; padding: 2.5rem;">
+                <h3 style="font-size: 1.75rem; margin-bottom: 2rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center;">
+                    <i class="fas fa-building"></i> Organization Experience
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">HIMATEKKOM ITS</h4>
+                        <p style="color: rgba(255,255,255,0.9); font-weight: 600; margin-bottom: 0.25rem;">Kabinet Titik Transformasi</p>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 0.5rem;">Staff PSDM</p>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Koor Steering Committee BOTECH</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">BEM FTEIC ITS</h4>
+                        <p style="color: rgba(255,255,255,0.9); font-weight: 600; margin-bottom: 0.25rem;">Kabinet Spektrum Simfoni</p>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Staff PSDM</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Pemandu FTEIC ITS</h4>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Centurion Kabinet Api Hitam</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Staff Ahli Divisi Lapangan</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Centurion Kabinet Pilar Hitam</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Staff Divisi PDD</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Committee Experience -->
+            <div style="background: linear-gradient(145deg, rgba(74, 20, 140, 0.2) 0%, rgba(255, 215, 0, 0.05) 100%); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 24px; padding: 2.5rem;">
+                <h3 style="font-size: 1.75rem; margin-bottom: 2rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center;">
+                    <i class="fas fa-users"></i> Committee Experience
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">CEC Season 1</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Staff Ahli Divisi Lapangan</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">MAGE II</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Vice Project Officer I</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Perayaan Wisuda 132 Teknik Komputer</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Ketua Divisi PDD</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">INCLENATION 2025</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Ketua Divisi Creative</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Perayaan Wisuda 131 Teknik Komputer</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Ketua Pelaksana</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">PEMILU HIMATEKKOM 2025</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Panitia</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">PEMILU BEM FTEIC 2025</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Staff Media PPU</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">MAGE X</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Staff PDD</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--gold); padding-left: 1.25rem;">
+                        <h4 style="color: var(--gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">SPS 130</h4>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Volunteer Divisi CDD</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
