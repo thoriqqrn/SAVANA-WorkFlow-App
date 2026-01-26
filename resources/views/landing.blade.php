@@ -1099,6 +1099,44 @@
         </div>
     </section>
 
+    <!-- RPO & Social Media Section -->
+    <section style="background: linear-gradient(135deg, rgba(74, 20, 140, 0.3) 0%, rgba(255, 215, 0, 0.1) 100%); padding: 5rem 2rem;">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <!-- RPO Links -->
+            <div style="background: linear-gradient(145deg, rgba(10, 10, 20, 0.8) 0%, rgba(74, 20, 140, 0.2) 100%); border: 2px solid rgba(255, 215, 0, 0.3); border-radius: 30px; padding: 3rem; text-align: center; margin-bottom: 2rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔎</div>
+                <h3 style="font-size: 1.75rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;">
+                    Penasaran dengan visi, misi, dan program kerjanya?
+                </h3>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.7;">
+                    Tenang ajaa~ temen-temen bisa cek melalui link berikut yaa 👇
+                </p>
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="https://its.id/m/RPOSentraSinergi" target="_blank" style="background: var(--gradient-gold); color: var(--purple-deep); padding: 16px 32px; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);">
+                        <i class="fas fa-book"></i> Buku RPO
+                    </a>
+                    <a href="https://its.id/m/PPTRPOSentraSinergi" target="_blank" style="background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 14px 30px; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s;">
+                        <i class="fas fa-file-powerpoint"></i> Versi PPT
+                    </a>
+                </div>
+            </div>
+
+            <!-- Instagram -->
+            <div style="background: linear-gradient(145deg, rgba(10, 10, 20, 0.8) 0%, rgba(74, 20, 140, 0.2) 100%); border: 2px solid rgba(255, 215, 0, 0.3); border-radius: 30px; padding: 2.5rem; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📲</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--gold); font-weight: 700;">
+                    Masih pengen update dan konten lainnya?
+                </h3>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 1.5rem;">
+                    Pantengin juga Official Account Sentra Sinergi di sini 👀✨
+                </p>
+                <a href="https://www.instagram.com/sentrasinergi/" target="_blank" style="background: linear-gradient(135deg, #E1306C 0%, #F77737 50%, #FCAF45 100%); color: white; padding: 14px 32px; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 4px 20px rgba(225, 48, 108, 0.4);">
+                    <i class="fab fa-instagram"></i> @sentrasinergi
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Programs Section -->
     <section class="programs" id="programs">
         <div class="section-header">
