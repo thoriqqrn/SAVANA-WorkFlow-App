@@ -7,10 +7,15 @@ use App\Models\Department;
 use App\Models\Program;
 use App\Models\Task;
 use App\Models\Timeline;
+use App\Services\GoogleCalendarService;
 use Illuminate\Http\Request;
 
 class TimelineController extends Controller
 {
+    public function __construct(private GoogleCalendarService $googleCalendarService)
+    {
+    }
+
     public function index()
     {
         $user = auth()->user();
@@ -215,11 +220,36 @@ class TimelineController extends Controller
         }
 
         $timeline = Timeline::create($validated);
+
+        $googleSyncError = null;
+        $googleSyncWarning = null;
+        $googleSyncSuccess = null;
+        $googleEventId = $this->googleCalendarService->upsertTimelineEvent($timeline->loadMissing(['department', 'program']));
+        if ($googleEventId) {
+            $timeline->update(['google_event_id' => $googleEventId]);
+            $googleSyncSuccess = $this->formatGoogleSyncSuccess('ditambahkan');
+        } elseif ($this->googleCalendarService->enabled()) {
+            $googleSyncError = $this->formatGoogleSyncError($this->googleCalendarService->getLastError(), 'menambahkan');
+        } else {
+            $googleSyncWarning = $this->formatGoogleSyncDisabledWarning();
+        }
         
         ActivityLog::log('created', "Created timeline: {$timeline->title}", $timeline);
 
-        return redirect()->route('timelines.index')
+        $redirect = redirect()->route('timelines.index')
             ->with('success', 'Timeline berhasil ditambahkan!');
+
+        if ($googleSyncError) {
+            $redirect->with('error', $googleSyncError);
+        }
+        if ($googleSyncWarning) {
+            $redirect->with('warning', $googleSyncWarning);
+        }
+        if ($googleSyncSuccess) {
+            $redirect->with('success', "Timeline berhasil ditambahkan! {$googleSyncSuccess}");
+        }
+
+        return $redirect;
     }
 
     public function edit(Timeline $timeline)
@@ -251,22 +281,91 @@ class TimelineController extends Controller
         }
 
         $timeline->update($validated);
+
+        $googleSyncError = null;
+        $googleSyncWarning = null;
+        $googleSyncSuccess = null;
+        $googleEventId = $this->googleCalendarService->upsertTimelineEvent($timeline->fresh(['department', 'program']));
+        if ($googleEventId && $googleEventId !== $timeline->google_event_id) {
+            $timeline->update(['google_event_id' => $googleEventId]);
+            $googleSyncSuccess = $this->formatGoogleSyncSuccess('diupdate');
+        } elseif ($googleEventId) {
+            $googleSyncSuccess = $this->formatGoogleSyncSuccess('diupdate');
+        } elseif (!$googleEventId && $this->googleCalendarService->enabled()) {
+            $googleSyncError = $this->formatGoogleSyncError($this->googleCalendarService->getLastError(), 'mengupdate');
+        } else {
+            $googleSyncWarning = $this->formatGoogleSyncDisabledWarning();
+        }
         
         ActivityLog::log('updated', "Updated timeline: {$timeline->title}", $timeline);
 
-        return redirect()->route('timelines.index')
+        $redirect = redirect()->route('timelines.index')
             ->with('success', 'Timeline berhasil diupdate!');
+
+        if ($googleSyncError) {
+            $redirect->with('error', $googleSyncError);
+        }
+        if ($googleSyncWarning) {
+            $redirect->with('warning', $googleSyncWarning);
+        }
+        if ($googleSyncSuccess) {
+            $redirect->with('success', "Timeline berhasil diupdate! {$googleSyncSuccess}");
+        }
+
+        return $redirect;
     }
 
     public function destroy(Timeline $timeline)
     {
         $title = $timeline->title;
+        $googleEventId = $timeline->google_event_id;
         
         ActivityLog::log('deleted', "Deleted timeline: {$title}", $timeline);
         
         $timeline->delete();
 
-        return redirect()->route('timelines.index')
+        $googleDeleteError = null;
+        $googleDeleteWarning = null;
+        $googleDeleteSuccess = null;
+        $deleted = $this->googleCalendarService->deleteTimelineEvent($googleEventId, $timeline->id);
+        if ($googleEventId && !$deleted && $this->googleCalendarService->enabled()) {
+            $googleDeleteError = $this->formatGoogleSyncError($this->googleCalendarService->getLastError(), 'menghapus');
+        } elseif ($googleEventId && $deleted) {
+            $googleDeleteSuccess = 'Event Google Calendar juga berhasil dihapus.';
+        } elseif (!$this->googleCalendarService->enabled()) {
+            $googleDeleteWarning = $this->formatGoogleSyncDisabledWarning();
+        }
+
+        $redirect = redirect()->route('timelines.index')
             ->with('success', "Timeline {$title} berhasil dihapus!");
+
+        if ($googleDeleteError) {
+            $redirect->with('error', $googleDeleteError);
+        }
+        if ($googleDeleteWarning) {
+            $redirect->with('warning', $googleDeleteWarning);
+        }
+        if ($googleDeleteSuccess) {
+            $redirect->with('success', "Timeline {$title} berhasil dihapus! {$googleDeleteSuccess}");
+        }
+
+        return $redirect;
+    }
+
+    private function formatGoogleSyncError(?string $reason, string $action): string
+    {
+        $suffix = $reason ? " Detail: {$reason}" : '';
+
+        return "Timeline berhasil {$action} di aplikasi, tapi gagal sinkron ke Google Calendar.{$suffix}";
+    }
+
+    private function formatGoogleSyncSuccess(string $action): string
+    {
+        return "Sinkron Google Calendar berhasil {$action}.";
+    }
+
+    private function formatGoogleSyncDisabledWarning(): string
+    {
+        return 'Sinkron Google Calendar sedang nonaktif (GOOGLE_CALENDAR_ENABLED=false).';
     }
 }

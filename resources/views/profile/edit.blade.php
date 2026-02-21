@@ -9,6 +9,11 @@
     max-width: 600px;
     margin: 0 auto;
 }
+.profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 .avatar-upload {
     display: flex;
     flex-direction: column;
@@ -97,10 +102,80 @@
 .user-info-value {
     font-weight: 500;
 }
+.modal-backdrop-custom {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 16px;
+}
+.modal-backdrop-custom.is-active {
+    display: flex;
+}
+.modal-card-custom {
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(2, 6, 23, 0.2);
+    overflow: hidden;
+    animation: modalPop 0.2s ease;
+}
+.modal-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+.modal-card-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.modal-card-body {
+    padding: 20px;
+}
+.modal-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 20px 20px;
+}
+.modal-close-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.password-help {
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
 </style>
 @endpush
 
 @section('content')
+@php
+    $hasPasswordErrors = $errors->has('current_password') || $errors->has('password') || $errors->has('password_confirmation');
+@endphp
+
 <div class="profile-card">
     <div class="card animate-fadeIn">
         <div class="card-header">
@@ -182,9 +257,12 @@
                     </div>
                 </div>
                 
-                <div class="d-flex gap-2">
+                <div class="profile-actions">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
+                    <button type="button" class="btn btn-warning" id="openPasswordModalBtn">
+                        <i class="fas fa-lock"></i> Ubah Password
                     </button>
                     <a href="{{ route('dashboard') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Kembali
@@ -192,6 +270,65 @@
                 </div>
             </form>
         </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-backdrop-custom {{ $hasPasswordErrors ? 'is-active' : '' }}" id="passwordModal" aria-hidden="{{ $hasPasswordErrors ? 'false' : 'true' }}">
+    <div class="modal-card-custom" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+        <div class="modal-card-header">
+            <h5 class="modal-card-title" id="passwordModalTitle">
+                <i class="fas fa-key text-primary"></i> Ubah Password
+            </h5>
+            <button type="button" class="modal-close-btn" id="closePasswordModalBtn" aria-label="Tutup">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ route('profile.password.update') }}" id="passwordForm">
+            @csrf
+            @method('PUT')
+
+            <div class="modal-card-body">
+                <div class="form-group">
+                    <label for="current_password" class="form-label">Password Saat Ini</label>
+                    <input type="password" id="current_password" name="current_password"
+                           class="form-control @error('current_password') is-invalid @enderror"
+                           autocomplete="current-password" required>
+                    @error('current_password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password Baru</label>
+                    <input type="password" id="password" name="password"
+                           class="form-control @error('password') is-invalid @enderror"
+                           autocomplete="new-password" required>
+                    <small class="password-help">Gunakan minimal 8 karakter kombinasi huruf, angka, dan simbol.</small>
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="password_confirmation" class="form-label">Konfirmasi Password Baru</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation"
+                           class="form-control @error('password_confirmation') is-invalid @enderror"
+                           autocomplete="new-password" required>
+                    @error('password_confirmation')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="modal-card-footer">
+                <button type="button" class="btn btn-secondary" id="cancelPasswordModalBtn">Batal</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check-circle"></i> Simpan Password
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -230,5 +367,65 @@ function removeAvatar() {
         }
     });
 }
+
+const passwordModal = document.getElementById('passwordModal');
+const openPasswordModalBtn = document.getElementById('openPasswordModalBtn');
+const closePasswordModalBtn = document.getElementById('closePasswordModalBtn');
+const cancelPasswordModalBtn = document.getElementById('cancelPasswordModalBtn');
+
+function openPasswordModal() {
+    passwordModal.classList.add('is-active');
+    passwordModal.setAttribute('aria-hidden', 'false');
+}
+
+function closePasswordModal() {
+    passwordModal.classList.remove('is-active');
+    passwordModal.setAttribute('aria-hidden', 'true');
+}
+
+openPasswordModalBtn.addEventListener('click', openPasswordModal);
+closePasswordModalBtn.addEventListener('click', closePasswordModal);
+cancelPasswordModalBtn.addEventListener('click', closePasswordModal);
+
+passwordModal.addEventListener('click', function (event) {
+    if (event.target === passwordModal) {
+        closePasswordModal();
+    }
+});
+
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && passwordModal.classList.contains('is-active')) {
+        closePasswordModal();
+    }
+});
+
+@if (session('status') === 'password-updated')
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil',
+    text: 'Password berhasil diperbarui.',
+    timer: 2200,
+    showConfirmButton: false
+});
+@endif
+
+@if (session('success') && session('status') !== 'password-updated')
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil',
+    text: @json(session('success')),
+    timer: 2200,
+    showConfirmButton: false
+});
+@endif
+
+@if ($hasPasswordErrors)
+Swal.fire({
+    icon: 'error',
+    title: 'Gagal Ubah Password',
+    text: 'Periksa kembali input password kamu.',
+    confirmButtonText: 'Oke'
+});
+@endif
 </script>
 @endpush

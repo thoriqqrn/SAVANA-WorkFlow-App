@@ -155,6 +155,13 @@
                         <span>{{ session('error') }}</span>
                     </div>
                 @endif
+
+                @if(session('warning'))
+                    <div class="alert alert-warning animate-fadeIn">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>{{ session('warning') }}</span>
+                    </div>
+                @endif
                 
                 @if($errors->any())
                     <div class="alert alert-danger animate-fadeIn">
@@ -343,5 +350,4 @@
     </script>
 </body>
 </html>
-
 

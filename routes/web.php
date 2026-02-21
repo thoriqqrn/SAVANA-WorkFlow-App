@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     // Profile Routes - All authenticated users
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profile/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.avatar.remove');
     
     // Notification Routes - All authenticated users
@@ -155,6 +156,5 @@ Route::middleware('auth')->group(function () {
     // Staff: view own evaluations
     Route::get('/my-evaluations', [EvaluationController::class, 'myEvaluations'])->name('evaluations.my');
 });
-
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -59,5 +60,19 @@ class ProfileController extends Controller
 
         return redirect()->back()
             ->with('success', 'Foto profil berhasil dihapus!');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
+        ]);
+
+        $user = auth()->user();
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        return redirect()->back()->with('status', 'password-updated');
     }
 }
